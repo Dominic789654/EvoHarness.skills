@@ -11,6 +11,8 @@ Run bounded auto-research for harness engineering. Turn code, traces, metrics, a
 
 Optimize task-specific harness code around a fixed base model. Treat the harness as the editable layer that stores, retrieves, filters, formats, plans, or wraps tool use for a repeated task family.
 
+Treat harness evolution as versioned research. Keep failed versions for analysis, but preserve a rollback path to the best earlier frontier when a new candidate regresses.
+
 Do not present this as a way to rewrite a full production agent product or run open-ended scientific research. Use it for narrow, benchmarkable harness surfaces with clear interfaces and cheap-enough repeated evaluation.
 
 ## Readiness Check
@@ -38,6 +40,8 @@ If the domain is not yet specified, create a domain spec first. Use `references/
 - Preserve source code, scores, traces, and reports for later iterations.
 - Validate imports and interface compliance before registering a candidate.
 - Treat benchmark improvements as provisional until replicated or confirmed on held-out evaluation.
+- Keep every evaluated version addressable by file name, commit, run directory, or manifest entry.
+- Never overwrite the active frontier with a worse candidate; record regressions as research evidence and roll forward again from the best known version.
 
 ## Standard Files
 
@@ -50,8 +54,10 @@ Use the project's existing structure when present. Otherwise create the smallest
 - `evolution_summary.jsonl`: one JSON row per candidate
 - `reports/`: short post-eval reports
 - `pending_eval.json`: candidates for the outer evaluator
+- `plots/`: version-vs-score charts when visualization is requested
 
 Use `references/candidate-contracts.md` when defining the exact interface and output schema.
+Use `references/version-control.md` when setting up candidate versioning, rollback, and score visualization.
 
 ## Research Loop
 
@@ -63,7 +69,8 @@ Treat each iteration as a bounded research cycle:
 4. Intervene: implement one candidate harness change.
 5. Evaluate: run the agreed search metric.
 6. Attribute: explain wins and regressions from trace evidence.
-7. Preserve: write the result back to the experience store.
+7. Select: keep the active frontier at the best validated version, not necessarily the newest version.
+8. Preserve: write the result back to the experience store.
 
 ## Iteration Workflow
 
@@ -107,8 +114,15 @@ Treat each iteration as a bounded research cycle:
 
 8. After evaluation:
    - update frontier and summary files
+   - keep regressed candidates in history, but set the active baseline/frontier to the best known version
    - write or update a short report using `references/iteration-report-template.md`
    - carry forward the trace-level lesson, not just the score
+
+## Versioning And Visualization
+
+Prefer normal git commits, candidate manifests, or immutable run directories to track versions. Record enough metadata to answer: which code produced this score, what was the parent version, and why was it kept or rejected?
+
+When the user asks for progress visualization, generate a chart with version or iteration on the x-axis and eval score on the y-axis. Plot both candidate score and best-so-far frontier when available. Use `scripts/plot_scores.py` for `evolution_summary.jsonl` files.
 
 ## Candidate Quality Checklist
 
@@ -122,6 +136,7 @@ Reject or rewrite a candidate if:
 - It improves known tasks by hardcoding their names or artifacts.
 - It removes logging needed for later diagnosis.
 - It has no plausible failure mode or falsifiable claim.
+- It cannot be rolled back without losing the previous best version.
 
 ## Mechanism Ideas
 
