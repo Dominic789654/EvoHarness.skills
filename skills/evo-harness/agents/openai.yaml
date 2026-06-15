@@ -1,0 +1,4 @@
+interface:
+  display_name: "Evo Harness"
+  short_description: "Trace-driven harness evolution workflow"
+  default_prompt: "Use $evo-harness to set up a trace-driven harness evolution loop for this benchmark."
