@@ -1,15 +1,17 @@
 ---
 name: evo-harness
-description: "Use when Codex needs to design, run, or maintain a Meta-Harness-style evolution loop for task-specific model harnesses: memory systems, retrieval wrappers, prompt/context builders, tool-use scaffolds, or agent harness code. Trigger for requests to optimize a harness from traces, define candidate interfaces, set up frontier/evolution logs, analyze candidate results, prevent search/test leakage, or register new candidate harnesses for benchmark evaluation."
+description: "Use when Codex needs bounded auto-research for harness engineering: designing, running, or maintaining a Meta-Harness-style evolution loop over task-specific model harnesses such as memory systems, retrieval wrappers, prompt/context builders, tool-use scaffolds, or agent harness code. Trigger for requests to optimize a harness from traces, turn candidate history into hypotheses, define candidate interfaces, set up frontier/evolution logs, analyze candidate results, prevent search/test leakage, or register new candidate harnesses for benchmark evaluation."
 ---
 
 # Evo Harness
 
 ## Purpose
 
+Run bounded auto-research for harness engineering. Turn code, traces, metrics, and candidate history into falsifiable harness hypotheses, executable candidate code, and held-out evaluation discipline.
+
 Optimize task-specific harness code around a fixed base model. Treat the harness as the editable layer that stores, retrieves, filters, formats, plans, or wraps tool use for a repeated task family.
 
-Do not present this as a way to rewrite a full production agent product. Use it for narrow, benchmarkable harness surfaces with clear interfaces and cheap-enough repeated evaluation.
+Do not present this as a way to rewrite a full production agent product or run open-ended scientific research. Use it for narrow, benchmarkable harness surfaces with clear interfaces and cheap-enough repeated evaluation.
 
 ## Readiness Check
 
@@ -50,6 +52,18 @@ Use the project's existing structure when present. Otherwise create the smallest
 - `pending_eval.json`: candidates for the outer evaluator
 
 Use `references/candidate-contracts.md` when defining the exact interface and output schema.
+
+## Research Loop
+
+Treat each iteration as a bounded research cycle:
+
+1. Observe: read source, metrics, frontier, and traces.
+2. Diagnose: identify the failure mechanism.
+3. Hypothesize: write a falsifiable mechanism-level claim.
+4. Intervene: implement one candidate harness change.
+5. Evaluate: run the agreed search metric.
+6. Attribute: explain wins and regressions from trace evidence.
+7. Preserve: write the result back to the experience store.
 
 ## Iteration Workflow
 
